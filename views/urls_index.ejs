@@ -1,0 +1,13 @@
+<html lang="en">
+<head>
+  <title>TinyApp</title>
+</head>
+<body>
+  <ul>
+    <% Object.keys(urls).forEach(shortURL => {%>
+      <li>-Full Length URL: <%= urls[shortURL] %> -Shortened URL: <%= shortURL %></li>
+    <% }); %>
+  </ul>
+  Shorten New URL <a href='#'>Here</a>
+</body>
+</html>
