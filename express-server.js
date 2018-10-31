@@ -2,7 +2,7 @@ const express = require("express");
 const app = express();
 const bodyParser = require('body-parser');
 const PORT = 8080; // default port 8080
-let urlDatabase = {
+var urlDatabase = {
   'b2xVn2': "http://www.lighthouselabs.ca",
   '9sm5xK': 'http://www.google.com'
 };
@@ -65,5 +65,12 @@ app.get('/u/:shortURL', (req, res) => {
 app.get('/urls/:id/delete', (req, res) => {
   const id = req.params.id;
   delete urlDatabase[id];
+  res.redirect('/urls');
+});
+
+//altering the longURL of a certain shortURL
+app.post('/urls/:id/edit', (req, res) => {
+  const id = req.params.id;
+  urlDatabase[id] = req.body.changedLongURL;
   res.redirect('/urls');
 });
