@@ -2,14 +2,24 @@ const express = require("express");
 const app = express();
 const bodyParser = require('body-parser');
 const PORT = 8080; // default port 8080
-
-app.use(bodyParser.urlencoded({ extended: true }));
-app.set('view engine', 'ejs');
-
 let urlDatabase = {
   'b2xVn2': "http://www.lighthouselabs.ca",
   '9sm5xK': 'http://www.google.com'
 };
+
+function generateRandomString() {
+  const chars = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYVabcdefghijklmnopqrstuvwxyz";
+  const stringLength = 6;
+  let randomString = '';
+  for (let i = 0; i < stringLength; i++) {
+    let randomNrL = chars[Math.round(Math.random() * chars.length)];
+    randomString += randomNrL;
+  }
+  return randomString;
+}
+
+app.use(bodyParser.urlencoded({ extended: true }));
+app.set('view engine', 'ejs');
 
 app.listen(PORT, () => {
   console.log(`Example app listening on port ${PORT}!`);
@@ -39,6 +49,7 @@ app.get('/urls/:id', (req, res) => {
 
 //posts longurl of user submited url
 app.post('/urls', (req, res) => {
-  console.log(req.body);
-  res.send('Ok');
+  let shortURL = generateRandomString();
+  urlDatabase[shortURL] = req.body.longURL;
+  res.redirect(`/urls/${shortURL}`);
 });
