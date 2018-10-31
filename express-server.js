@@ -53,3 +53,10 @@ app.post('/urls', (req, res) => {
   urlDatabase[shortURL] = req.body.longURL;
   res.redirect(`/urls/${shortURL}`);
 });
+
+//redirects short url to longURL
+app.get('/u/:shortURL', (req, res) => {
+  let shortURL = req.params.shortURL;
+  let longURL = urlDatabase[shortURL];
+  res.redirect(longURL);
+});
