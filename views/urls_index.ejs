@@ -6,7 +6,8 @@
 <body>
   <ul>
     <% Object.keys(urls).forEach(shortURL => {%>
-      <li>-Full Length URL: <%= urls[shortURL] %> -Shortened URL: <%= shortURL %></li>
+      <li>--> Full Length URL: <%= urls[shortURL] %> --> Shortened URL: <%= shortURL %>
+        <form method="POST" action='/urls/<%= shortURL %>/delete'>(<a href="/urls/<%= shortURL %>/delete">Delete URL</a>)</form></li>
     <% }); %>
   </ul>
   Shorten New URL <a href='/urls/new'>Here</a>

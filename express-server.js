@@ -60,3 +60,10 @@ app.get('/u/:shortURL', (req, res) => {
   let longURL = urlDatabase[shortURL];
   res.redirect(longURL);
 });
+
+//deleting a url from database
+app.get('/urls/:id/delete', (req, res) => {
+  const id = req.params.id;
+  delete urlDatabase[id];
+  res.redirect('/urls');
+});
