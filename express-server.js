@@ -18,7 +18,9 @@ function generateRandomString() {
   return randomString;
 }
 
-app.use(bodyParser.urlencoded({ extended: true }));
+app.use(bodyParser.urlencoded({
+  extended: true
+}));
 app.set('view engine', 'ejs');
 
 app.listen(PORT, () => {
@@ -27,7 +29,9 @@ app.listen(PORT, () => {
 
 //gets all urls and shows them
 app.get('/urls', (req, res) => {
-  let templateVars = { urls: urlDatabase };
+  let templateVars = {
+    urls: urlDatabase
+  };
   res.render('urls_index', templateVars);
 });
 
@@ -40,8 +44,11 @@ app.get('/urls/new', (req, res) => {
 app.get('/urls/:id', (req, res) => {
   const id = req.params.id;
   let currentURL = urlDatabase[id];
-  let templateVars = { shortURL: req.params.id, longURL: currentURL };
-  if(urlDatabase.hasOwnProperty(id) === false){
+  let templateVars = {
+    shortURL: req.params.id,
+    longURL: currentURL
+  };
+  if (urlDatabase.hasOwnProperty(id) === false) {
     throw new error(`ID ${id} does not exist.`);
   }
   res.render('urls_show', templateVars);

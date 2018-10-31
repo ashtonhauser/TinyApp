@@ -1,11 +1,19 @@
 <!DOCTYPE html>
 <html>
 <% include ./partials/_head.ejs %>
+
 <body>
-  <h4>Full length URL: <%= longURL %><h4>
-  <h4>Shortened URL: <%= shortURL %><h4>
-  <form method= "POST" action="/urls/<%= shortURL %>/edit">
-    Edit Full Length URL: <input type="text" name="changedLongURL" id="changedLongURL" placeholder="New Address Location"><input type="submit" value="Change" />
-  </form>
+  <h4>Full length URL:
+    <%= longURL %>
+    <h4>
+      <h4>Shortened URL:
+        <%= shortURL %>
+        <h4>
+          <form method="POST" action="/urls/<%= shortURL %>/edit">
+            Edit Full Length URL:
+            <input type="text" name="changedLongURL" id="changedLongURL" placeholder="New Address Location">
+            <input type="submit" value="Change" />
+          </form>
 </body>
+
 </html>

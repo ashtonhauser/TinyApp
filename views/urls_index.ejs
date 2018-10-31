@@ -1,17 +1,22 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
   <title>TinyApp</title>
 </head>
+
 <body>
   <ul>
     <% Object.keys(urls).forEach(shortURL => {%>
-      <li>--> Full Length URL: <%= urls[shortURL] %> --> Shortened URL: <%= shortURL %><br/>
-        <form method="POST" action='/urls/<%= shortURL %>/delete'><input type="submit" value="Delete"/></form>
-        <form action="/urls/<%= shortURL %>"><input type="submit" value="Edit"/></form>
-      </li>
+    <li>--> Full Length URL:
+      <%= urls[shortURL] %> --> Shortened URL:
+      <%= shortURL %><br />
+      <form method="POST" action='/urls/<%= shortURL %>/delete'><input type="submit" value="Delete" /></form>
+      <form action="/urls/<%= shortURL %>"><input type="submit" value="Edit" /></form>
+    </li>
     <% }); %>
   </ul>
   Shorten New URL <a href='/urls/new'>Here</a>
 </body>
+
 </html>
