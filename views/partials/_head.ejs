@@ -1,14 +1,10 @@
 <head>
   <title>TinyApp</title>
-  <% if (!user) { %>
-  <form action="/login" method="POST">
-    <input type="email" name="email" id="email" placeholder="Email" />
-    <input type="password" name="password" id="password" placeholder="Password" />
-    <input type="submit" value="Login">
-  </form>
+  <% if (!id) { %>
+  <a href="/register">Register</a>
+  <br />
+  <a href="/login">Login</a>
   <% } else { %>
-  <form action="/logout" method="POST">
-    <input type="submit" value="Logout">
-  </form>
+  <a href="/logout">Logout</a>
   <% } %>
 </head>

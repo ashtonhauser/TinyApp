@@ -31,11 +31,30 @@ function generateRandomString() {
   return randomString;
 }
 
+//checks if the email given in registration the same as any users
 function doesEmailRepeat(emailBeingChecked) {
   for (const user in users) {
     let currentUser = users[user];
-    if (currentUser.email === emailBeingChecked) {
-      return true;
+    return currentUser.email === emailBeingChecked;
+  }
+}
+
+//checks if given email and password match any users
+function whichIdDoesThisMatch(givenEmail, givenPassword) {
+  for (const user in users) {
+    let currentUser = users[user];
+    if (currentUser.email === givenEmail) {
+      if (currentUser.password === givenPassword) {
+        return currentUser.id;
+      }
+    }
+  }
+}
+
+function doesThisIdMatch(givenId) {
+  for (let i = 0; i < Object.keys(users).length; i++) {
+    if (Object.keys(users)[i] === givenId) {
+      return Object.keys(users)[i];
     }
   }
 }
@@ -51,7 +70,7 @@ app.set('view engine', 'ejs');
 app.get('/urls', (req, res) => {
   const templateVars = {
     urls: urlDatabase,
-    user: users[req.cookies.user_id]
+    id: req.cookies.user_id
   };
   res.render('urls_index', templateVars);
 });
@@ -59,7 +78,7 @@ app.get('/urls', (req, res) => {
 //gets a page that you can input a new url to be shortened
 app.get('/urls/new', (req, res) => {
   const templateVars = {
-    user: users[req.cookies.user_id]
+    id: req.cookies.user_id
   };
   res.render('urls_new', templateVars);
 });
@@ -71,7 +90,7 @@ app.get('/urls/:id', (req, res) => {
   const templateVars = {
     shortURL: req.params.id,
     longURL: currentURL,
-    user: users[req.cookies.username]
+    id: req.cookies.user_id
   };
   if (urlDatabase.hasOwnProperty(id) === false) {
     throw new error(`ID ${id} does not exist.`);
@@ -107,14 +126,25 @@ app.post('/urls/:id/edit', (req, res) => {
   res.redirect('/urls');
 });
 
+//displays login page
+app.get('/login', (req, res) => {
+  templateVars = { id: req.cookies.user_id };
+  res.render('_login', templateVars);
+});
+
 //store login data in cookie
 app.post('/login', (req, res) => {
-  res.cookie('user_id', `${req.body.username}`);
+  console.log(whichIdDoesThisMatch(req.body.email, req.body.password));
+  if (whichIdDoesThisMatch(req.body.email, req.body.password)) {
+    res.cookie('user_id', doesThisIdMatch(whichIdDoesThisMatch(req.body.email, req.body.password)));
+  } else {
+    res.status(403).send({ error: 'Email or Password does not match user', code: 403 });
+  }
   res.redirect('/urls');
 });
 
 //clears login data from cookie
-app.post('/logout', (req, res) => {
+app.get('/logout', (req, res) => {
   res.clearCookie('user_id');
   res.redirect('/urls');
 });
