@@ -1,4 +1,5 @@
-const express = require("express");
+const cookieParser = require('cookie-parser');
+const express = require('express');
 const app = express();
 const bodyParser = require('body-parser');
 const PORT = 8080; // default port 8080
@@ -18,26 +19,28 @@ function generateRandomString() {
   return randomString;
 }
 
+app.use(cookieParser());
 app.use(bodyParser.urlencoded({
   extended: true
 }));
 app.set('view engine', 'ejs');
 
-app.listen(PORT, () => {
-  console.log(`Example app listening on port ${PORT}!`);
-});
 
 //gets all urls and shows them
 app.get('/urls', (req, res) => {
   let templateVars = {
-    urls: urlDatabase
+    urls: urlDatabase,
+    username: req.cookies.username
   };
   res.render('urls_index', templateVars);
 });
 
 //gets a page that you can input a new url to be shortened
 app.get('/urls/new', (req, res) => {
-  res.render('urls_new');
+  templateVars = {
+    username: req.cookies.username
+  };
+  res.render('urls_new', templateVars);
 });
 
 //gets a certain id no. long and short url
@@ -46,7 +49,8 @@ app.get('/urls/:id', (req, res) => {
   let currentURL = urlDatabase[id];
   let templateVars = {
     shortURL: req.params.id,
-    longURL: currentURL
+    longURL: currentURL,
+    username: req.cookies.username
   };
   if (urlDatabase.hasOwnProperty(id) === false) {
     throw new error(`ID ${id} does not exist.`);
@@ -54,7 +58,7 @@ app.get('/urls/:id', (req, res) => {
   res.render('urls_show', templateVars);
 });
 
-//posts longurl of user submited url
+//posts longURL of user changed url
 app.post('/urls', (req, res) => {
   let shortURL = generateRandomString();
   urlDatabase[shortURL] = req.body.longURL;
@@ -69,7 +73,7 @@ app.get('/u/:shortURL', (req, res) => {
 });
 
 //deleting a url from database
-app.get('/urls/:id/delete', (req, res) => {
+app.post('/urls/:id/delete', (req, res) => {
   const id = req.params.id;
   delete urlDatabase[id];
   res.redirect('/urls');
@@ -80,4 +84,20 @@ app.post('/urls/:id/edit', (req, res) => {
   const id = req.params.id;
   urlDatabase[id] = req.body.changedLongURL;
   res.redirect('/urls');
+});
+
+//store login data in cookie
+app.post('/login', (req, res) => {
+  res.cookie('username', `${req.body.username}`);
+  res.redirect('/urls');
+});
+
+//clears login data from cookie
+app.post('/logout', (req, res) => {
+  res.clearCookie('username');
+  res.redirect('/urls');
+});
+
+app.listen(PORT, () => {
+  console.log(`Example app listening on port ${PORT}!`);
 });
