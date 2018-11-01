@@ -3,9 +3,21 @@ const express = require('express');
 const app = express();
 const bodyParser = require('body-parser');
 const PORT = 8080; // default port 8080
-var urlDatabase = {
+const urlDatabase = {
   'b2xVn2': "http://www.lighthouselabs.ca",
   '9sm5xK': 'http://www.google.com'
+};
+const users = {
+  "userRandomID": {
+    id: "userRandomID",
+    email: "user@example.com",
+    password: "purple-monkey-dinosaur"
+  },
+ "user2RandomID": {
+    id: "user2RandomID",
+    email: "user2@example.com",
+    password: "dishwasher-funk"
+  }
 };
 
 function generateRandomString() {
@@ -19,6 +31,15 @@ function generateRandomString() {
   return randomString;
 }
 
+function doesEmailRepeat(emailBeingChecked) {
+  for (const user in users) {
+    let currentUser = users[user];
+    if (currentUser.email === emailBeingChecked) {
+      return true;
+    }
+  }
+}
+
 app.use(cookieParser());
 app.use(bodyParser.urlencoded({
   extended: true
@@ -28,17 +49,17 @@ app.set('view engine', 'ejs');
 
 //gets all urls and shows them
 app.get('/urls', (req, res) => {
-  let templateVars = {
+  const templateVars = {
     urls: urlDatabase,
-    username: req.cookies.username
+    user: users[req.cookies.user_id]
   };
   res.render('urls_index', templateVars);
 });
 
 //gets a page that you can input a new url to be shortened
 app.get('/urls/new', (req, res) => {
-  templateVars = {
-    username: req.cookies.username
+  const templateVars = {
+    user: users[req.cookies.user_id]
   };
   res.render('urls_new', templateVars);
 });
@@ -47,10 +68,10 @@ app.get('/urls/new', (req, res) => {
 app.get('/urls/:id', (req, res) => {
   const id = req.params.id;
   let currentURL = urlDatabase[id];
-  let templateVars = {
+  const templateVars = {
     shortURL: req.params.id,
     longURL: currentURL,
-    username: req.cookies.username
+    user: users[req.cookies.username]
   };
   if (urlDatabase.hasOwnProperty(id) === false) {
     throw new error(`ID ${id} does not exist.`);
@@ -88,14 +109,33 @@ app.post('/urls/:id/edit', (req, res) => {
 
 //store login data in cookie
 app.post('/login', (req, res) => {
-  res.cookie('username', `${req.body.username}`);
+  res.cookie('user_id', `${req.body.username}`);
   res.redirect('/urls');
 });
 
 //clears login data from cookie
 app.post('/logout', (req, res) => {
-  res.clearCookie('username');
+  res.clearCookie('user_id');
   res.redirect('/urls');
+});
+
+//open register page
+app.get('/register', (req, res) => {
+  res.render('_register');
+});
+
+//posting user inputed data to our users object
+app.post('/register', (req, res) => {
+  //checking to see if forms are filled out and not the same as other users
+  if (req.body.email && req.body.password && !doesEmailRepeat(req.body.email)) {
+    const userID = generateRandomString();
+    let currentUserID = users.userID;
+    currentUserID = { id: userID, email: req.body.email, password: req.body.password };
+    res.cookie('user_id', userID);
+    res.redirect('/urls');
+  } else {
+    res.status(400).send({ error: "Required fields not filled or email same as another user", code: 400 });
+  }
 });
 
 app.listen(PORT, () => {
