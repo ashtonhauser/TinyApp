@@ -3,18 +3,45 @@
 
 <% include partials/_head %>
 
+<br />
 <body>
+
+  <% if (id) {%>
+
   <ul>
     <% Object.keys(urls).forEach(shortURL => {%>
-    <li>--> Full Length URL:
-      <%= urls[shortURL] %> --> Shortened URL:
-      <%= shortURL %><br />
+
+    <li>
+    --> Full Length URL:
+
+      <%= urls[shortURL].longURL %>
+
+     --> Shortened URL:
+
+      <%= shortURL %>
+
+      <br />
+
+      <% if (urls[shortURL].userID === id) { %>
+
       <form method="POST" action='/urls/<%= shortURL %>/delete'><input type="submit" value="Delete" /></form>
       <form action="/urls/<%= shortURL %>"><input type="submit" value="Edit" /></form>
+
+      <% } %>
+
     </li>
+
     <% }); %>
+
   </ul>
   Shorten New URL <a href='/urls/new'>Here</a>
+
+  <% } else { %>
+
+  Login or Register to start making and using shortend URLs
+
+  <% } %>
+
 </body>
 
 </html>

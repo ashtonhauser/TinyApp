@@ -3,10 +3,20 @@ const express = require('express');
 const app = express();
 const bodyParser = require('body-parser');
 const PORT = 8080; // default port 8080
+
 const urlDatabase = {
-  'b2xVn2': "http://www.lighthouselabs.ca",
-  '9sm5xK': 'http://www.google.com'
+  "b2xVn2": {
+    longURL: "http://www.lighthouselabs.ca",
+    shortURL: "b2xVn2",
+    userID: "userRandomID"
+   },
+  "9sm5xK": {
+    longURL:'http://www.google.com',
+    shortURL: "9sm5xk",
+    userID: "user2RandomID"
+   }
 };
+
 const users = {
   "userRandomID": {
     id: "userRandomID",
@@ -72,8 +82,16 @@ app.get('/', (req, res) => {
 
 //gets all urls and shows them
 app.get('/urls', (req, res) => {
+  let filteredDatabase = {};
+  for (var currentShortURL in urlDatabase) {
+    console.log(currentShortURL);
+    if (urlDatabase[currentShortURL].userID === req.cookies.user_id) {
+      filteredDatabase[currentShortURL] = { 'longURL': urlDatabase[currentShortURL].longURL, 'shortURL': currentShortURL, 'userID': req.cookies.user_id };
+    }
+  }
+  console.log(filteredDatabase);
   const templateVars = {
-    urls: urlDatabase,
+    urls: filteredDatabase,
     id: req.cookies.user_id
   };
   res.render('urls_index', templateVars);
@@ -91,10 +109,10 @@ app.get('/urls/new', (req, res) => {
   }
 });
 
-//gets a certain id no. long and short url
+//gets a certain id no.s long and short url
 app.get('/urls/:id', (req, res) => {
   const id = req.params.id;
-  let currentURL = urlDatabase[id];
+  let currentURL = urlDatabase[id].longURL;
   const templateVars = {
     shortURL: req.params.id,
     longURL: currentURL,
@@ -106,10 +124,14 @@ app.get('/urls/:id', (req, res) => {
   res.render('urls_show', templateVars);
 });
 
-//posts longURL of user changed url
+//posts longURL of user changed and created url
 app.post('/urls', (req, res) => {
   let shortURL = generateRandomString();
-  urlDatabase[shortURL] = req.body.longURL;
+  urlDatabase[shortURL] = { longURL: "", shortURL: "", userID: ""};
+  urlDatabase[shortURL].longURL = req.body.longURL;
+  urlDatabase[shortURL].shortURL = shortURL;
+  urlDatabase[shortURL].userID = req.cookies.user_id;
+  console.log(urlDatabase);
   res.redirect(`/urls/${shortURL}`);
 });
 
@@ -130,7 +152,7 @@ app.post('/urls/:id/delete', (req, res) => {
 //altering the longURL of a certain shortURL
 app.post('/urls/:id/edit', (req, res) => {
   const id = req.params.id;
-  urlDatabase[id] = req.body.changedLongURL;
+  urlDatabase[id].longURL = req.body.changedLongURL;
   res.redirect('/urls');
 });
 
