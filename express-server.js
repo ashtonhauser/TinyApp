@@ -60,11 +60,15 @@ function doesThisIdMatch(givenId) {
 }
 
 app.use(cookieParser());
-app.use(bodyParser.urlencoded({
-  extended: true
-}));
+app.use(bodyParser.urlencoded({ extended: true }));
 app.set('view engine', 'ejs');
 
+app.get('/', (req, res) => {
+  const templateVars = {
+    id: req.cookies.user_id
+  };
+  res.render('home', templateVars);
+});
 
 //gets all urls and shows them
 app.get('/urls', (req, res) => {
@@ -80,7 +84,11 @@ app.get('/urls/new', (req, res) => {
   const templateVars = {
     id: req.cookies.user_id
   };
-  res.render('urls_new', templateVars);
+  if (req.cookies.user_id) {
+    res.render('urls_new', templateVars);
+  } else {
+    res.redirect('/login');
+  }
 });
 
 //gets a certain id no. long and short url
