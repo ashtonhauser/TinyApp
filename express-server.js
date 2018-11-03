@@ -79,21 +79,16 @@ app.get('/', (req, res) => {
 
 //gets all urls and shows them
 app.get('/urls', (req, res) => {
-  let eml = "";
-  if (!req.session.user_id) {
-    eml = "User Not Logged In";
+  if (users[req.session.user_id]) {
+      let eml = users[req.session.user_id].email;
+    const templateVars = {
+      urls: urlsForUser(req.session.user_id),
+      id: req.session.user_id,
+      email: eml
+    };
+      res.render('urls_index', templateVars);
   } else {
-    eml = users[req.session.user_id].email;
-  }
-  const templateVars = {
-    urls: urlsForUser(req.session.user_id),
-    id: req.session.user_id,
-    email: eml
-  };
-  if (!doesThisIdMatch(req.session.user_id)) {
     res.redirect('/login');
-  } else {
-    res.render('urls_index', templateVars);
   }
 });
 
@@ -182,7 +177,7 @@ app.get('/login', (req, res) => {
   if (users[req.session.user_id]) {
     res.redirect('/urls');
   }
-  res.render('_login', templateVars);
+  res.render('_login');
 });
 
 //store login data in cookie
