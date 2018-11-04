@@ -104,7 +104,7 @@ app.get('/urls/new', (req, res) => {
     id: req.session.user_id,
     email: eml
   };
-  if (doesThisIdMatch(req.session.user_id)) {
+  if (users[req.session.user_id]) {
     res.render('urls_new', templateVars);
   } else {
     res.redirect('/login');
@@ -182,14 +182,15 @@ app.get('/login', (req, res) => {
 
 //store login data in cookie
 app.post('/login', (req, res) => {
-  const emailMatched = doesThisEmailMatch(req.body.email);
-  const passwordMatched = bcrypt.compareSync(req.body.password, hashes[req.body.email]);
-  if (emailMatched && passwordMatched) {
+  if (!hashes[req.body.email] || !req.body.password) {
+    res.status(403).send({ error: 'Email or Password does not match user', code: 403 });
+  }
+  if (bcrypt.compareSync(req.body.password, hashes[req.body.email])) {
     req.session.user_id = doesThisEmailMatch(req.body.email, "h");
+    res.redirect("/");
   } else {
     res.status(403).send({ error: 'Email or Password does not match user', code: 403 });
   }
-  res.redirect('/urls');
 });
 
 //clears login data from cookie

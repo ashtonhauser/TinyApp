@@ -1,11 +1,32 @@
 <!DOCTYPE  html>
 <html>
-<form action="/login" method="POST">
-  <input type="email" name="email" id="email" placeholder="Email" />
-  <input type="password" name="password" id="password" placeholder="Password" />
-  <input type="submit" value="Login">
-</form>
-<br />
-Don't have an account? Register <a href="/register">Here</a>
+<style>
 
+h1 {
+  font-size: 100px;
+  color: #6641a0;
+  text-decoration: underline;
+}
+
+body {
+  text-align: center;
+
+  border: solid;
+  border-width: 5px;
+  border-color: grey;
+  border-radius: 6px;
+
+  color: grey;
+}
+
+</style>
+<body>
+  <h1>TinyApp</h1>
+  <form action="/login" method="POST">
+    <input type="email" name="email" id="email" placeholder="Email" />
+    <input type="password" name="password" id="password" placeholder="Password" />
+    <input type="submit" value="Login">
+  </form>
+  <br />
+  <h3>Don't have an account? Register <a href="/register">Here</a></h3>
 </html>

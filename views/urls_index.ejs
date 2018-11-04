@@ -1,4 +1,11 @@
 <!DOCTYPE html>
+<style>
+
+body {
+  text-align: center;
+}
+
+</style>
 <html lang="en">
 
 <% include partials/_head %>
@@ -9,17 +16,20 @@
   <% if (id) {%>
 
   <ul>
+
     <% Object.keys(urls).forEach(shortURL => {%>
 
     <li>
-    --> Full Length URL:
+
+      --> Full Length URL:
 
       <%= urls[shortURL].longURL %>
 
-     --> Shortened URL:
+      <br />
 
-       <a href=>(Local Path)/u/<%= shortURL %></a>
+      --> Shortened URL:
 
+      <a href='<%= urls[shortURL].longURL %>' > /u/<%= shortURL %></a>
       <br />
 
       <% if (urls[shortURL].userID === id) { %>
@@ -34,14 +44,17 @@
     <% }); %>
 
   </ul>
-  Shorten New URL <a href='/urls/new'>Here</a>
+  <p>
+    Shorten New URL <a href='/urls/new'>Here</a>
+  </p>
 
   <% } else { %>
 
-  Login or Register to start making and using shortend URLs
+  <p>
+    Login or Register to start making and using shortend URLs
+  </p>
 
   <% } %>
 
 </body>
-
 </html>

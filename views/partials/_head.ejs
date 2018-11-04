@@ -1,13 +1,31 @@
 <head>
+  <style>
+
+  form {
+    color: #6641a0;
+    text-align: center;
+  }
+
+  h1 {
+    color: #6641a0;
+    text-decoration: underline;
+  }
+
+  </style>
   <title>TinyApp</title>
+  <h1><a href="/">TinyApp</a></h1>
+
   <% if (!id) { %>
+
   <a href="/register">Register</a>
   <a href="/login">Login</a>
+
   <% } else { %>
-  <% if (email) { %>
-    <%= email %>
-  <% } %>
+
   <form method="post" action="/logout">
+
+    <%= email %>
+
     <input type="submit" value="Logout" />
   </form>
   <% } %>

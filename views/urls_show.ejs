@@ -1,14 +1,28 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <% include ./partials/_head.ejs %>
+
+<style>
+
+body {
+  text-align: center;
+}
+
+</style>
 
 <body>
   <h4>Full length URL:
-    <%= longURL %>
-    <h4>
-      <h4>Shortened URL:
-        <%= shortURL %>
-        <h4>
+  <br />
+
+  <%= longURL %>
+
+  <h4/>
+  <h4>Shortened URL:
+
+  <a href="<%= longURL %>"> /u/<%= shortURL %> </a>
+
+  <h4>
           <form method="POST" action="/urls/<%= shortURL %>/edit">
             Edit Full Length URL:
             <input type="text" name="changedLongURL" id="changedLongURL" placeholder="New Address Location">

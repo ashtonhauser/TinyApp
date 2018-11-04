@@ -1,14 +1,31 @@
 <!DOCTYPE html>
 <html>
+<style>
 
+h1 {
+  color: #6641a0;
+  text-decoration: underline;
+}
+
+body {
+  text-align: center;
+
+  border: solid;
+  border-width: 5px;
+  border-color: grey;
+  border-radius: 6px;
+
+  color: grey;
+}
+</style>
 <body>
-  Register New Account:
+  <h1>Welcome to TinyApp</h1>
+  <h2>Register New Account:</h2>
   <form  method="post" action="/register">
     <input type="email" name="email" id="email" placeholder="Email*"/>
     <input type="password" name="password" id="password" placeholder="Password*"/>
     <input type="submit" value="Submit" />
   </form>
-  * Notes Required Fields
+  <h3>* Notes Required Fields</h3>
 </body>
-
 </html>
